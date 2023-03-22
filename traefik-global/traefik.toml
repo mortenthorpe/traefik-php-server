@@ -1,0 +1,29 @@
+[log]
+  level = "DEBUG"
+  
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+
+#  [entryPoints.web.http.redirections.entryPoint]
+#    to = "websecure"
+#    scheme = "https"
+
+ # [entryPoints.websecure]
+ #   address = ":443"
+
+#Letsencrypt
+#[certificatesResolvers.letsencrypt.acme]
+#  email = "mortenthorpe@gmail.com"
+#  storage = "/letsencrypt/acme.json"
+#  [certificatesResolvers.letsencrypt.acme.tlsChallenge]
+
+[api]
+  dashboard = true
+  insecure = true
+  
+#Docker 
+[providers.docker]
+  exposedByDefault = true
+  network = "traefik-global-proxy" # this is really important when you have multiple networks on a single container. This will tell Traefik to always look for network traefik-global-proxy and not any other internal networks.
+  watch = true

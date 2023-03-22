@@ -1,0 +1,30 @@
+# https://www.leonpahole.com/blog/traefik-basic-setup
+version: "3.6" # important, so that we can name our network
+
+services:
+  traefik:
+    image: "traefik:v2.2"
+    container_name: "traefik"
+    networks:
+      - traefik-global-proxy
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - "./traefik.toml:/etc/traefik/traefik.toml"
+#      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.enable=true" # enable the dashboard
+      - "traefik.http.routers.traefik.rule=Host(`localhost.monitor`)" # domain for dashboard
+#      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.entrypoints=web"
+#      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+#      - "traefik.http.routers.traefik.service=api@internal" # points to dashboard
+#      - "traefik.http.routers.traefik.middlewares=auth" # enable password auth
+#      - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$Dqo7TC2B$$23bAWltXXzx01XUbq2BU50" # substitute with your htpasswd string and escape dollar signs!
+
+# this is the network that every container should connect to, in order to communicate with Traefik. We give it a nice name to type it easier.
+networks:
+  traefik-global-proxy:
+    name: "traefik-global-proxy"
